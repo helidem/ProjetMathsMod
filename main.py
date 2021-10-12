@@ -1,18 +1,33 @@
 import random
+import numpy as np
+#definition des variables globales
+NBIT = 500
+choix = 'pair'
 
-nombre=random.randint(0,36)
-capital=1000
-mise=int(input("Entre la mise initiale : "))
-capital=capital-mise
-n=0
-while(capital>0):
-	nombre=random.randint(0,36)
-	if(nombre%2 == 0):
-		print("gg")
-		capital =+ mise * 2
-	elif (nombre==0 or nombre%2 != 0):
-		print("perdu")
-	print(nombre)
-	n=+1
+miseDep = 20
+valeurs = ["pair", "impair", "0"]
+proba = [18/37,18/37,1/37]
+mise=miseDep
+capitaux=np.array()
+print("Martingale classique")
+for j in range(10000):
+	
+	capitalCumule=0
+	capital=1000
+	for i in range(NBIT):
 
-print("T'as perdu au bout de ",n,)
+		capital=capital-mise
+		if(capital<=0):
+			#print("Plus d'argent au bout de", i,"iterations")
+			break
+		resultat = random.choices(valeurs,proba)
+		if(resultat[0] == 'pair'):
+			capital=capital+(mise*2)
+			mise=miseDep
+			#print("G", mise, capital)
+		elif(resultat[0] == 'impair'):
+			mise=mise*2
+			#print("P",mise, capital)	
+	capitaux.add(capital)
+moyenne=capitaux.mean(capitaux,axis=None)
+print(moyenne)
